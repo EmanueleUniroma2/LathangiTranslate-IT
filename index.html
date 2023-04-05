@@ -50,9 +50,27 @@
         },
         {
           type: "sostantivo",
+          it: "popolo",
+          it_plurale: "popoli",
+          trad: "tivud",
+        },
+        {
+          type: "sostantivo",
           it: "casa",
           it_plurale: "case",
           trad: "dosn",
+        },
+        {
+          type: "sostantivo",
+          it: "forma",
+          it_plurale: "forme",
+          trad: "clud",
+        },
+        {
+          type: "sostantivo",
+          it: "vita",
+          it_plurale: "vite",
+          trad: "khel",
         },
         {
           type: "sostantivo",
@@ -90,6 +108,18 @@
           it_plurale: "nemici#nemiche",
           trad: "emil",
         },
+        {
+          type: "sostantivo",
+          it: "desiderio",
+          it_plurale: "desideri",
+          trad: "crih",
+        },
+        {
+          type: "sostantivo",
+          it: "isola",
+          it_plurale: "isole",
+          trad: "onakda",
+        },
       ];
 
       const ADJECTIVES = [
@@ -100,35 +130,83 @@
           sostantivo: "verità",
           trad: "thum",
         },
+        {
+          type: "aggettivo",
+          it: "lontano#lontane",
+          it_plurale: "lontani#lontane",
+          sostantivo: "lontananza",
+          trad: "grevet",
+        },
+        {
+          type: "aggettivo",
+          it: "un#uno#una",
+          it_plurale: "uni#une",
+          sostantivo: "unità",
+          trad: "od",
+        },
+        {
+          type: "aggettivo",
+          it: "rifugiato#rifugiata",
+          it_plurale: "lrifugiati#rifugiate",
+          sostantivo: "lontananza",
+          trad: "tagoi",
+        },
       ];
 
       const IT_VERBS_PREFIXES_MAP = [
         {
           verbo: "essere",
           trad: "iete",
-          suffissi: [
-            "son",
-            "sei",
-            "è",
-            "esser",
-            "sia",
-            "sie",
-            "sar",
-            "er",
-            "sta",
-            "sto",
-            "stiam",
-          ],
+          suffissi: ["son", "sei", "è", "esser", "sia", "sie", "sar", "er"],
         },
         {
           verbo: "avere",
           trad: "hote",
-          suffissi: ["ho", "hai", "ha", "abbia", "hanno", "avr", "ave", "avu"],
+          suffissi: [
+            "ho",
+            "hai",
+            "ha",
+            "abbia",
+            "hanno",
+            "avr",
+            "ave",
+            "avu",
+            "fu",
+          ],
+        },
+        {
+          verbo: "stare",
+          trad: "tieve",
+          suffissi: [
+            "sta",
+            "sto",
+            "stà",
+            "stò",
+            "stiam",
+            "star",
+            "stav",
+            "stet",
+          ],
         },
         {
           verbo: "distruggere",
           trad: "torose",
           suffissi: ["distru"],
+        },
+        {
+          verbo: "fuggire",
+          trad: "loge",
+          suffissi: ["fugg"],
+        },
+        {
+          verbo: "credere",
+          trad: "kete",
+          suffissi: ["cred"],
+        },
+        {
+          verbo: "proteggere",
+          trad: "guke",
+          suffissi: ["proteg", "protet", "protess"],
         },
         {
           verbo: "vedere",
@@ -146,9 +224,34 @@
           suffissi: ["cap"],
         },
         {
+          verbo: "piangere",
+          trad: "omete",
+          suffissi: ["piang", "piant"],
+        },
+        {
+          verbo: "nascere",
+          trad: "nidare",
+          suffissi: ["nasc", "nat"],
+        },
+        {
+          verbo: "conoscere",
+          trad: "cardete",
+          suffissi: ["conosc"],
+        },
+        {
           verbo: "potere",
           trad: "tore",
           suffissi: ["pos", "puo", "pot"],
+        },
+        {
+          verbo: "supplicare",
+          trad: "karse",
+          suffissi: ["supplic"],
+        },
+        {
+          verbo: "difendere",
+          trad: "citale",
+          suffissi: ["difen", "difes"],
         },
         {
           verbo: "restare#rimanere",
@@ -159,6 +262,16 @@
           verbo: "volere",
           trad: "itcrae",
           suffissi: ["vog", "vuo", "vol"],
+        },
+        {
+          verbo: "dovere",
+          trad: "buome",
+          suffissi: ["dev", "dob", "dov"],
+        },
+        {
+          verbo: "combattere",
+          trad: "azare",
+          suffissi: ["comba"],
         },
         {
           verbo: "dire",
@@ -191,6 +304,21 @@
           suffissi: ["ucci"],
         },
         {
+          verbo: "portare",
+          trad: "falete",
+          suffissi: ["port"],
+        },
+        {
+          verbo: "riportare",
+          trad: "garene",
+          suffissi: ["riport"],
+        },
+        {
+          verbo: "morire",
+          trad: "mate",
+          suffissi: ["muoi", "muor", "mori", "more", "mort"],
+        },
+        {
           verbo: "aiutare",
           trad: "elkete",
           suffissi: ["aiut"],
@@ -210,8 +338,8 @@
       const IT_VERBS_DESINENSE = [
         {
           time: "presente-attivo",
-          desinenze: ["$presente"],
-          aux: "$gerundio-presente",
+          desinenze: ["$gerundio-presente"],
+          aux: "$presente",
         },
         {
           time: "passato-attivo",
@@ -234,7 +362,19 @@
         },
         {
           time: "presente",
-          desinenze: ["o", "i", "a", "e", "amo", "te", "no", "de"],
+          desinenze: [
+            "o",
+            "è",
+            "i",
+            "à",
+            "ò",
+            "a",
+            "e",
+            "amo",
+            "te",
+            "no",
+            "de",
+          ],
         },
         {
           time: "passato",
@@ -244,10 +384,14 @@
           time: "futuro",
           desinenze: ["rò", "rai", "rà", "remo", "rete", "ranno"],
         },
-        /*{
+        {
           time: "imperativo",
           desinenze: ["a", "ate", "ete", "ite"],
-        },*/
+        },
+        {
+          time: "congiuntivo-prensente",
+          desinenze: ["i", "iamo", "iate", "ino", "ano"],
+        },
         {
           time: "gerundio-presente",
           desinenze: ["ando", "endo"],
@@ -258,7 +402,11 @@
         },
         {
           time: "participio-passato",
-          desinenze: ["ito", "isto", "ato", "uto"],
+          desinenze: ["ito", "isto", "ato", "uto", "tto", "ata"],
+        },
+        {
+          time: "condizionale",
+          desinenze: ["rei", "esti", "ebbe", "emmo", "este", "ebbero"],
         },
       ];
 
@@ -467,11 +615,6 @@
 
       const IT_ARTICLES = [
         {
-          type: "articolo_indeterminativo",
-          it: "un#uno#una",
-          trad: null,
-        },
-        {
           type: "articolo_determinativo",
           it: "il#la#lo#i#gli#le",
           trad: null,
@@ -496,12 +639,8 @@
           desinenza: "-ul",
         },
         {
-          tempo: "congiuntivo-unica-forma",
+          tempo: "congiuntivo-prensente",
           desinenza: "-osh",
-        },
-        {
-          tempo: "condizionale-unica-forma",
-          desinenza: "-fitre",
         },
         {
           tempo: "participio-presente",
@@ -518,6 +657,10 @@
         {
           tempo: "gerundio-passato",
           desinenza: "-uledo",
+        },
+        {
+          tempo: "condizionale",
+          desinenza: "-fitre",
         },
         {
           tempo: "imperativo",
@@ -671,11 +814,6 @@
           type: "avverbio",
           it: "ieri",
           trad: "petamedo",
-        },
-        {
-          type: "avverbio",
-          it: "lontano",
-          trad: "ukushipa",
         },
         {
           type: "avverbio",
@@ -854,11 +992,6 @@
         },
         {
           type: "avverbio",
-          it: "vicino",
-          trad: "merò",
-        },
-        {
-          type: "avverbio",
           it: "volentieri",
           trad: "tindù",
         },
@@ -894,6 +1027,30 @@
         },
       ];
 
+      const IT_PREP_ARTICULATED = [
+        {
+          from: "del#dello#della#dell'#dei#degli#delle",
+          to: "di",
+        },
+
+        {
+          from: "al#allo#alla#all’#ai#agli#alle",
+          to: "a",
+        },
+        {
+          from: "dal#dallo#dalla#dall’#dai#dagli#dalle",
+          to: "da",
+        },
+        {
+          from: "nel#nello#nella#nell’#nei#negli##nelle",
+          to: "in",
+        },
+        {
+          from: "sul#sullo#sulla#sull’#sui#sugli#sulle",
+          to: "su",
+        },
+      ];
+
       const COMPLEMENTS = [
         {
           type: "complemento_di_limitazione",
@@ -905,13 +1062,15 @@
           type: "complemento_di_termine",
           it: "a",
           trad: "or",
-          raisedBy: [{ type: "pronome_personale" }],
+          raisedBy: [
+            { type: "pronome_personale" },
+            { type: "pronome_personale" },
+          ],
         },
         {
           type: "complemento_moto_a_luogo",
           it: "a#verso",
           trad: "ic",
-          raisedBy: [{ type: "sostantivo" }],
         },
         {
           type: "complemento_di_compagnia",
@@ -932,7 +1091,7 @@
         },
         {
           type: "complemento_di_fine_e_complemento_di_causa",
-          it: "a#per#affinchè#affinché",
+          it: "per#affinchè#affinché",
           trad: "ut",
         },
         {
@@ -1426,7 +1585,11 @@
             })
         );
 
-        if (periodType === "exclamation" && chosenTime.time === "presente") {
+        if (
+          periodType === "exclamation" &&
+          chosenTime &&
+          chosenTime.time === "presente"
+        ) {
           chosenTime = IT_VERBS_DESINENSE.find((x) => x.time === "imperativo");
         }
 
@@ -1451,6 +1614,7 @@
             ? 1
             : 0;
         });
+
         for (let i = 0; i < sortedComplements.length; i++) {
           let c = sortedComplements[i];
           let wordMatches = matchWord(c.it, word);
@@ -1487,53 +1651,58 @@
             }
           }
         }
-
-        writeDebugLV2DevOut("Number tokens results: " + readnumbers.join(", "));
-
-        let number = "";
-        for (let i = 0; i < readnumbers.length; i++) {
-          let n = readnumbers[i];
-          let next = i + 1 < readnumbers.length ? readnumbers[i + 1] : null;
-
-          let currN = NUMBERS_IT.find((x) => x.it === n);
-          let nextN = NUMBERS_IT.find((x) => x.it === next);
-
-          let currOrder = NUMBERS_ORDERS.find(
-            (x) => x.order === currN.it_.length - 1
+        if (readnumbers.length > 0) {
+          writeDebugLV2DevOut(
+            "Number tokens results: " + readnumbers.join(", ")
           );
-          let nextOrder = next
-            ? NUMBERS_ORDERS.find((x) => x.order === nextN.it_.length - 1)
-            : null;
 
-          let plural =
-            nextOrder &&
-            ["2", "3", "4", "5", "6", "7", "8", "9"].includes(currN.it_);
-          let baseTrad = "";
-          let appendLater = "";
+          let number = "";
+          for (let i = 0; i < readnumbers.length; i++) {
+            let n = readnumbers[i];
+            let next = i + 1 < readnumbers.length ? readnumbers[i + 1] : null;
 
-          // number + magnitude (2mila... 3cento... etc)
-          if (!currOrder && nextOrder) {
-            baseTrad = currN.trad;
-            appendLater = nextOrder.trad;
-            i++;
+            let currN = NUMBERS_IT.find((x) => x.it === n);
+            let nextN = NUMBERS_IT.find((x) => x.it === next);
+
+            let currOrder = NUMBERS_ORDERS.find(
+              (x) => x.order === currN.it_.length - 1
+            );
+            let nextOrder = next
+              ? NUMBERS_ORDERS.find((x) => x.order === nextN.it_.length - 1)
+              : null;
+
+            let plural =
+              nextOrder &&
+              ["2", "3", "4", "5", "6", "7", "8", "9"].includes(currN.it_);
+            let baseTrad = "";
+            let appendLater = "";
+
+            // number + magnitude (2mila... 3cento... etc)
+            if (!currOrder && nextOrder) {
+              baseTrad = currN.trad;
+              appendLater = nextOrder.trad;
+              i++;
+            }
+
+            // magnitude only (cento, mille)
+            if (currOrder) {
+              baseTrad = !plural
+                ? NUMBERS_IT.find((x) => x.it_ === "1").trad
+                : "";
+              appendLater = currOrder.trad;
+            }
+
+            // number only (1,2,3)
+            if (!currOrder && !nextOrder) {
+              baseTrad = currN.trad;
+            }
+
+            number += baseTrad + appendLater + (plural ? "k" : "");
           }
-
-          // magnitude only (cento, mille)
-          if (currOrder) {
-            baseTrad = !plural
-              ? NUMBERS_IT.find((x) => x.it_ === "1").trad
-              : "";
-            appendLater = currOrder.trad;
-          }
-
-          // number only (1,2,3)
-          if (!currOrder && !nextOrder) {
-            baseTrad = currN.trad;
-          }
-
-          number += baseTrad + appendLater + (plural ? "k" : "");
+          return number;
         }
-        return number;
+
+        return null;
       }
 
       function getAdjective(word) {
@@ -1559,12 +1728,22 @@
 
       function getNumber(word, lastVerbSeen) {
         writeDebugLV2DevOut("About to try interpreting as number: " + word);
+        let trad = splitNumberInCoreTokens(word);
+        if (trad) {
+          return {
+            type: "numero",
+            trad: trad,
+            it: word,
+          };
+        }
+        return null;
+      }
 
-        return {
-          type: "numero",
-          trad: splitNumberInCoreTokens(word),
-          it: word,
-        };
+      function wordIsVerb(word, periodType, lastVerbSeen) {
+        if (word) {
+          return getVerb(word, periodType, lastVerbSeen) !== null;
+        }
+        return false;
       }
 
       // NOTE: lastVerbSeen is a VERB only if the PREVIOUS parsed work was a verb, else is undefined
@@ -1651,7 +1830,7 @@
           );
 
           // special fixes on positioning
-          if (constructs.length > 0) {
+          if (constructs.length > 0 && construct) {
             // pronome possessivo si inverte con il sostantivo che regge
             if (
               construct.type === "pronome_possessivo" &&
@@ -1662,7 +1841,7 @@
             }
 
             // gerundio-passato identifica subordinata a seguire
-            if (
+            else if (
               construct.type === "verbo" &&
               construct.verbTime === "gerundio-passato"
             ) {
@@ -1683,7 +1862,7 @@
             }
 
             // complemento_di_fine_e_complemento_di_causa identifica subordinata a seguire
-            if (
+            else if (
               construct.type === "complemento_di_fine_e_complemento_di_causa"
             ) {
               construct = null; // process in subordinate
@@ -1702,8 +1881,29 @@
               );
             }
 
+            // complemento_di_specificazione seguito da verbo identifica subordinata a seguire
+            else if (
+              wordIsVerb(nextWord, periodType, lastVerbSeen) &&
+              construct.type === "complemento_di_specificazione"
+            ) {
+              construct = null; // process in subordinate
+              // grab all the remaining words
+              let remainingWords = [];
+              while (i < words.length) {
+                remainingWords.push(words[i]);
+                i++;
+              }
+
+              subordinateWordsComplement = remainingWords.join(" ");
+              writeDebugDevOut(
+                "Hidden subordinate period detected from complement: <strong>" +
+                  subordinateWordsComplement +
+                  "</strong>.  "
+              );
+            }
+
             // complemento_di_oggetto_modo_e_stato preceduto da verbo identifica subordinata a seguire
-            if (
+            else if (
               lastVerbSeen &&
               construct.type === "complemento_di_oggetto_modo_e_stato"
             ) {
@@ -1772,6 +1972,13 @@
         for (let i = 0; i < splWords.length; i++) {
           let word = splWords[i];
           let validToken = true;
+          let matchPrepArt = IT_PREP_ARTICULATED.find((x) =>
+            matchWord(x.from, word)
+          );
+          if (matchPrepArt) {
+            word = matchPrepArt.to;
+          }
+
           if (IT_ARTICLES.find((x) => matchWord(x.it, word))) {
             validToken = false;
           }
@@ -2075,10 +2282,7 @@
         var copyText = document.getElementById("base-trad").innerText;
 
         // Copy the text inside the text field
-        navigator.clipboard.writeText(copyText.toString()).then((r) => {
-          // Alert the copied text
-          alert("Copied");
-        });
+        navigator.clipboard.writeText(copyText.toString());
       }
     </script>
   </head>
