@@ -1915,9 +1915,22 @@
           .getElementById("da-tradurre")
           .addEventListener("keydown", testEnter, false);
 
+        document.getElementById("da-tradurre").addEventListener(
+          "keyup",
+          (e) => {
+            localStorage.setItem("curr-value", e.target.value);
+          },
+          false
+        );
+
         document
           .getElementById("savebtn")
           .addEventListener("click", translate, false);
+
+        let currValue = localStorage.getItem("curr-value");
+        if (currValue) {
+          document.getElementById("da-tradurre").value = currValue;
+        }
       }
 
       function writeDevOut(out) {
@@ -1997,7 +2010,6 @@
           style="width: 100%; padding: 0.5em"
           id="da-tradurre"
           type="text"
-          value="Perché alcuni uomini hanno appiccato un fuoco per distruggere la montagna. stiamo fuggendo dal loro fuoco, noi abbiamo aiutato"
           placeholder="Inserire testo da tradurre."
         />
         <button id="savebtn">Traduci</button>
