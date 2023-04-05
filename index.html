@@ -1,0 +1,2033 @@
+<html>
+  <head>
+    <title>Traduttore Italiano-Lathangi</title>
+
+    <script type="text/javascript">
+      const VERBOSITY_UI_NONE = {
+        text: "Nessun log",
+        level: 0,
+      };
+      const VERBOSITY_UI_MINIMAL = {
+        text: "Log minimale",
+        level: 1,
+      };
+      const VERBOSITY_UI_DEBUG = {
+        text: "Debug",
+        level: 2,
+      };
+      const VERBOSITY_UI_DEBUG_2 = {
+        text: "Debug lv 2",
+        level: 3,
+      };
+      const VERBOSITY_LEVELS = [
+        VERBOSITY_UI_NONE,
+        VERBOSITY_UI_MINIMAL,
+        VERBOSITY_UI_DEBUG,
+        VERBOSITY_UI_DEBUG_2,
+      ];
+      var VERBOSITY = VERBOSITY_UI_DEBUG.level;
+
+      const WORDS = [
+        {
+          type: "sostantivo",
+          it: "figlia",
+          it_plurale: "figlie",
+          trad: "iephe",
+        },
+        {
+          type: "sostantivo",
+          it: "fuoco",
+          it_plurale: "fuochi",
+          trad: "zhaero",
+        },
+        {
+          type: "sostantivo",
+          it: "amico#amica",
+          it_plurale: "amici#amiche",
+          trad: "dosta",
+        },
+        {
+          type: "sostantivo",
+          it: "casa",
+          it_plurale: "case",
+          trad: "dosn",
+        },
+        {
+          type: "sostantivo",
+          it: "aroma",
+          it_plurale: "aromi",
+          trad: "laz",
+        },
+        {
+          type: "sostantivo",
+          it: "grotta",
+          it_plurale: "grotte",
+          trad: "elef",
+        },
+        {
+          type: "sostantivo",
+          it: "uomo",
+          it_plurale: "uomini",
+          trad: "shue",
+        },
+        {
+          type: "sostantivo",
+          it: "montagna",
+          it_plurale: "montagne",
+          trad: "plamaga",
+        },
+      ];
+
+      const IT_VERBS_PREFIXES_MAP = [
+        {
+          verbo: "essere",
+          trad: "iete",
+          suffissi: [
+            "son",
+            "sei",
+            "è",
+            "esser",
+            "sia",
+            "sie",
+            "sar",
+            "er",
+            "sta",
+            "sto",
+            "stiam",
+          ],
+        },
+        {
+          verbo: "avere",
+          trad: "hote",
+          suffissi: ["ho", "hai", "ha", "abbia", "hanno", "avr", "ave", "avu"],
+        },
+        {
+          verbo: "distruggere",
+          trad: "torose",
+          suffissi: ["distru"],
+        },
+        {
+          verbo: "vedere",
+          trad: "mise",
+          suffissi: ["ved", "vis"],
+        },
+        {
+          verbo: "spengere",
+          trad: "claphe",
+          suffissi: ["spen"],
+        },
+        {
+          verbo: "capire",
+          trad: "june",
+          suffissi: ["cap"],
+        },
+        {
+          verbo: "potere",
+          trad: "tore",
+          suffissi: ["pos", "puo", "pot"],
+        },
+        {
+          verbo: "volere",
+          trad: "itcrae",
+          suffissi: ["vog", "vuo", "vol"],
+        },
+        {
+          verbo: "andare",
+          trad: "telepe",
+          suffissi: ["va", "and"],
+        },
+        {
+          verbo: "avvicinare",
+          trad: "line",
+          suffissi: ["avvi"],
+        },
+        {
+          verbo: "mangiare",
+          trad: "ghane",
+          suffissi: ["mang"],
+        },
+        {
+          verbo: "temere",
+          trad: "iune",
+          suffissi: ["tem"],
+        },
+        {
+          verbo: "uccidere",
+          trad: "shadore",
+          suffissi: ["ucci"],
+        },
+        {
+          verbo: "aiutare",
+          trad: "elkete",
+          suffissi: ["aiut"],
+        },
+        {
+          verbo: "appiccare",
+          trad: "secte",
+          suffissi: ["appic"],
+        },
+        {
+          verbo: "fuggire",
+          trad: "idume",
+          suffissi: ["fug"],
+        },
+      ];
+
+      const IT_VERBS_DESINENSE = [
+        {
+          time: "presente-attivo",
+          desinenze: ["$presente"],
+          aux: "$gerundio-presente",
+        },
+        {
+          time: "passato-attivo",
+          desinenze: ["$gerundio-presente"],
+          aux: "$passato",
+        },
+        {
+          time: "futuro-attivo",
+          desinenze: ["$gerundio-presente"],
+          aux: "$futuro",
+        },
+        {
+          time: "gerundio-passato",
+          desinenze: ["$participio-passato"],
+          aux: "$gerundio-presente",
+        },
+        {
+          time: "infinito",
+          desinenze: ["are", "ere", "ire"],
+        },
+        {
+          time: "presente",
+          desinenze: ["o", "i", "a", "amo", "te", "no", "de"],
+        },
+        {
+          time: "passato",
+          desinenze: ["vo", "vi", "va", "vamo", "vate", "ano"],
+        },
+        {
+          time: "futuro",
+          desinenze: ["rò", "rai", "rà", "remo", "rete", "ranno"],
+        },
+        /*{
+          time: "imperativo",
+          desinenze: ["a", "ate", "ete", "ite"],
+        },*/
+        {
+          time: "gerundio-presente",
+          desinenze: ["ando", "endo"],
+        },
+        {
+          time: "participio-presente",
+          desinenze: ["ante", "ente"],
+        },
+        {
+          time: "participio-passato",
+          desinenze: ["ito", "isto", "ato", "uto"],
+        },
+      ];
+
+      const NUMBERS_ORDERS = [
+        {
+          order: 1,
+          trad: "ga",
+        },
+        {
+          order: 2,
+          trad: "meu",
+        },
+        {
+          order: 3,
+          trad: "asho",
+        },
+        {
+          order: 6,
+          trad: "lumme",
+        },
+        {
+          order: 9,
+          trad: "tarmale",
+        },
+      ];
+
+      const NUMBERS_IT = [
+        // NUMBERS_IT
+        {
+          it: "zero",
+          it_: "0",
+          trad: "her",
+        },
+        {
+          it: "uno",
+          it_: "1",
+          trad: "od",
+        },
+        {
+          it: "due",
+          it_: "2",
+          trad: "me",
+        },
+        {
+          it: "tre",
+          it_: "3",
+          trad: "sa",
+        },
+        {
+          it: "quattro",
+          it_: "4",
+          trad: "ri",
+        },
+        {
+          it: "cinque",
+          it_: "5",
+          trad: "jou",
+        },
+        {
+          it: "sei",
+          it_: "6",
+          trad: "nu",
+        },
+        {
+          it: "sette",
+          it_: "7",
+          trad: "yu",
+        },
+        {
+          it: "otto",
+          it_: "8",
+          trad: "fu",
+        },
+        {
+          it: "nove",
+          it_: "9",
+          trad: "op",
+        },
+        // bigger units
+        {
+          it: "dieci",
+          it_: "10",
+          trad: null,
+        },
+        {
+          it: "undici",
+          it_: "11",
+          trad: null,
+        },
+        {
+          it: "dodici",
+          it_: "12",
+          trad: null,
+        },
+        {
+          it: "tredici",
+          it_: "13",
+          trad: null,
+        },
+        {
+          it: "quattordici",
+          it_: "14",
+          trad: null,
+        },
+        {
+          it: "quindici",
+          it_: "15",
+          trad: null,
+        },
+        {
+          it: "sedici",
+          it_: "16",
+          trad: null,
+        },
+        {
+          it: "diciassette",
+          it_: "17",
+          trad: null,
+        },
+        {
+          it: "diciotto",
+          it_: "18",
+          trad: null,
+        },
+        {
+          it: "diciannove",
+          it_: "19",
+          trad: null,
+        },
+        {
+          it: "venti",
+          it_: "20",
+          trad: null,
+        },
+        {
+          it: "trenta",
+          it_: "30",
+          trad: null,
+        },
+        {
+          it: "quaranta",
+          it_: "40",
+          trad: null,
+        },
+        {
+          it: "cinquanta",
+          it_: "50",
+          trad: null,
+        },
+        {
+          it: "sessanta",
+          it_: "60",
+          trad: null,
+        },
+        {
+          it: "settanta",
+          it_: "70",
+          trad: null,
+        },
+        {
+          it: "ottanta",
+          it_: "80",
+          trad: null,
+        },
+        {
+          it: "novanta",
+          it_: "90",
+          trad: null,
+        },
+        {
+          it: "cento",
+          it_: "100",
+          trad: null,
+        },
+        {
+          it: "mille",
+          it_: "1000",
+          trad: null,
+        },
+        {
+          it: "mila",
+          it_: "1000",
+          trad: null,
+        },
+        {
+          it: "milione",
+          it_: "1000000",
+          trad: null,
+        },
+        {
+          it: "milioni",
+          it_: "1000000",
+          trad: null,
+        },
+        {
+          it: "miliardo",
+          it_: "1000000000",
+          trad: null,
+        },
+        {
+          it: "miliardi",
+          it_: "1000000000",
+          trad: null,
+        },
+      ];
+
+      const IT_ARTICLES = [
+        {
+          type: "articolo_indeterminativo",
+          it: "un#uno#una",
+          trad: null,
+        },
+        {
+          type: "articolo_determinativo",
+          it: "il#la#lo#i#gli#le",
+          trad: null,
+        },
+      ];
+
+      const VERBS_STRUCTURE = [
+        {
+          tempo: "infinito",
+          desinenza: "-e",
+        },
+        {
+          tempo: "presente",
+          desinenza: "-",
+        },
+        {
+          tempo: "futuro",
+          desinenza: "-etu",
+        },
+        {
+          tempo: "passato",
+          desinenza: "-ul",
+        },
+        {
+          tempo: "congiuntivo-unica-forma",
+          desinenza: "-osh",
+        },
+        {
+          tempo: "condizionale-unica-forma",
+          desinenza: "-fitre",
+        },
+        {
+          tempo: "participio-presente",
+          desinenza: "-ok",
+        },
+        {
+          tempo: "participio-passato",
+          desinenza: "-ulok",
+        },
+        {
+          tempo: "gerundio-presente",
+          desinenza: "-edo",
+        },
+        {
+          tempo: "gerundio-passato",
+          desinenza: "-uledo",
+        },
+        {
+          tempo: "imperativo",
+          desinenza: "-a",
+        },
+        {
+          tempo: "presente-attivo",
+          desinenza: "-ille",
+        },
+        {
+          tempo: "passato-attivo",
+          desinenza: "-ulille",
+        },
+        {
+          tempo: "futuro-attivo",
+          desinenza: "-etulle",
+        },
+        {
+          tempo: "premonitorio",
+          desinenza: "-ganil",
+        },
+      ];
+
+      const AVVERBS = [
+        {
+          type: "avverbio",
+          it: "proprio",
+          trad: "zutse",
+        },
+        {
+          type: "avverbio",
+          it: "davvero#invero",
+          trad: "dam",
+        },
+        {
+          type: "avverbio",
+          it: "giammai",
+          trad: "gotuh",
+        },
+        {
+          type: "avverbio",
+          it: "abbastanza",
+          trad: "sheshe",
+        },
+        {
+          type: "avverbio",
+          it: "adesso",
+          trad: "pud",
+        },
+        {
+          type: "avverbio",
+          it: "addirittura",
+          trad: "tanish",
+        },
+        {
+          type: "avverbio",
+          it: "altrettanto",
+          trad: "zomol",
+        },
+        {
+          type: "avverbio",
+          it: "altrove",
+          trad: "uvi",
+        },
+        {
+          type: "avverbio",
+          it: "ancora",
+          trad: "sgucal",
+        },
+        {
+          type: "avverbio",
+          it: "apposta",
+          trad: "tozo",
+        },
+        {
+          type: "avverbio",
+          it: "certo",
+          trad: "asci",
+        },
+        {
+          type: "avverbio",
+          it: "cioè",
+          trad: "dei",
+        },
+        {
+          type: "avverbio",
+          it: "circa",
+          trad: "enu",
+        },
+        {
+          type: "avverbio",
+          it: "come",
+          trad: "tum",
+        },
+        {
+          type: "avverbio",
+          it: "davvero",
+          trad: "dohno",
+        },
+        {
+          type: "avverbio",
+          it: "dappertutto",
+          trad: "cusagai",
+        },
+        {
+          type: "avverbio",
+          it: "domani",
+          trad: "apedi",
+        },
+        {
+          type: "avverbio",
+          it: "dopo",
+          trad: "latas",
+        },
+        {
+          type: "avverbio",
+          it: "dove",
+          trad: "eghiò",
+        },
+        {
+          type: "avverbio",
+          it: "ecco",
+          trad: "zaba",
+        },
+        {
+          type: "avverbio",
+          it: "entro",
+          trad: "linshae",
+        },
+        {
+          type: "avverbio",
+          it: "fa",
+          trad: "drui",
+        },
+        {
+          type: "avverbio",
+          it: "fino",
+          trad: "tolos",
+        },
+        {
+          type: "avverbio",
+          it: "forse",
+          trad: "neine",
+        },
+        {
+          type: "avverbio",
+          it: "già",
+          trad: "vurà",
+        },
+        {
+          type: "avverbio",
+          it: "ieri",
+          trad: "petamedo",
+        },
+        {
+          type: "avverbio",
+          it: "lontano",
+          trad: "ukushipa",
+        },
+        {
+          type: "avverbio",
+          it: "magari",
+          trad: "greivi",
+        },
+        {
+          type: "avverbio",
+          it: "mai",
+          trad: "thanor",
+        },
+        {
+          type: "avverbio",
+          it: "malapena",
+          trad: "xitsu",
+        },
+        {
+          type: "avverbio",
+          it: "meglio",
+          trad: "grat",
+        },
+        {
+          type: "avverbio",
+          it: "meno",
+          trad: "usee",
+        },
+        {
+          type: "avverbio",
+          it: "neanche",
+          trad: "parudi",
+        },
+        {
+          type: "avverbio",
+          it: "nemmeno",
+          trad: "uhcatrishte",
+        },
+        {
+          type: "avverbio",
+          it: "neppure",
+          trad: "vustaeda",
+        },
+        {
+          type: "avverbio",
+          it: "non",
+          trad: "gic",
+        },
+        {
+          type: "avverbio",
+          it: "no",
+          trad: "uh",
+        },
+        {
+          type: "avverbio",
+          it: "oggi",
+          trad: "lapar",
+        },
+        {
+          type: "avverbio",
+          it: "oltre",
+          trad: "vinuune",
+        },
+        {
+          type: "avverbio",
+          it: "onde",
+          trad: "chusa",
+        },
+        {
+          type: "avverbio",
+          it: "ora",
+          trad: "plo",
+        },
+        {
+          type: "avverbio",
+          it: "poi",
+          trad: "cun",
+        },
+        {
+          type: "avverbio",
+          it: "presso",
+          trad: "otoo",
+        },
+        {
+          type: "avverbio",
+          it: "presto",
+          trad: "zerà",
+        },
+        {
+          type: "avverbio",
+          it: "prima",
+          trad: "ikiodo",
+        },
+        {
+          type: "avverbio",
+          it: "purtroppo",
+          trad: "zamelemè",
+        },
+        {
+          type: "avverbio",
+          it: "così",
+          trad: "bui",
+        },
+        {
+          type: "avverbio",
+          it: "quasi",
+          trad: "natna",
+        },
+        {
+          type: "avverbio",
+          it: "qui",
+          trad: "shed",
+        },
+        {
+          type: "avverbio",
+          it: "lì#li",
+          trad: "rad",
+        },
+        {
+          type: "avverbio",
+          it: "quindi",
+          trad: "fanak",
+        },
+        {
+          type: "avverbio",
+          it: "sempre",
+          trad: "asamui",
+        },
+        {
+          type: "avverbio",
+          it: "siccome",
+          trad: "dolo",
+        },
+        {
+          type: "avverbio",
+          it: "si",
+          trad: "has",
+        },
+        {
+          type: "avverbio",
+          it: "solo",
+          trad: "des",
+        },
+        {
+          type: "avverbio",
+          it: "soltanto",
+          trad: "sdanii",
+        },
+        {
+          type: "avverbio",
+          it: "spesso",
+          trad: "takniva",
+        },
+        {
+          type: "avverbio",
+          it: "stasera",
+          trad: "uiini",
+        },
+        {
+          type: "avverbio",
+          it: "subito",
+          trad: "var",
+        },
+        {
+          type: "avverbio",
+          it: "talmente",
+          trad: "matui",
+        },
+        {
+          type: "avverbio",
+          it: "vagamente",
+          trad: "nego",
+        },
+        {
+          type: "avverbio",
+          it: "via",
+          trad: "salà",
+        },
+        {
+          type: "avverbio",
+          it: "vicino",
+          trad: "merò",
+        },
+        {
+          type: "avverbio",
+          it: "volentieri",
+          trad: "tindù",
+        },
+        {
+          type: "avverbio",
+          it: "piuttosto",
+          trad: "apinod",
+        },
+        {
+          type: "avverbio",
+          it: "più",
+          trad: "mun",
+        },
+        {
+          type: "avverbio",
+          it: "comunque",
+          trad: "sheiki",
+        },
+        {
+          type: "avverbio",
+          it: "solamente",
+          trad: "pirit",
+        },
+        {
+          type: "avverbio",
+          it: "peggio",
+          trad: "raide",
+        },
+        {
+          type: "avverbio",
+          it: "perfino",
+          trad: "okad",
+        },
+      ];
+
+      const COMPLEMENTS = [
+        {
+          type: "complemento_di_limitazione",
+          it: "per#secondo",
+          trad: "ur",
+          raisedBy: [{ type: "pronome_personale" }],
+        },
+        {
+          type: "complemento_di_termine",
+          it: "a",
+          trad: "or",
+          raisedBy: [{ type: "pronome_personale" }],
+        },
+        {
+          type: "complemento_moto_a_luogo",
+          it: "a#verso",
+          trad: "ic",
+          raisedBy: [{ type: "sostantivo" }],
+        },
+        {
+          type: "complemento_di_compagnia",
+          it: "con",
+          trad: "ovu",
+          raisedBy: [{ type: "pronome_personale" }],
+        },
+        {
+          type: "complemento_di_mezzo",
+          it: "con",
+          trad: "bid",
+          raisedBy: [{ type: "sostantivo" }],
+        },
+        {
+          type: "complemento_di_argomento",
+          it: "riguardo",
+          trad: "pas",
+        },
+        {
+          type: "complemento_di_fine_e_complemento_di_causa",
+          it: "a#per#affinchè#affinché",
+          trad: "ut",
+        },
+        {
+          type: "complemento_di_tempo_continuato",
+          it: "da",
+          trad: "lime",
+          raisedBy: [{ type: "numero" }],
+        },
+        {
+          type: "complemento_di_specificazione",
+          it: "di",
+          trad: "asa",
+        },
+        {
+          type: "complemento_di_tempo_terminato",
+          it: "per",
+          trad: "nor",
+          raisedBy: [{ type: "numero" }],
+        },
+        {
+          type: "complemento_di_moto_da_luogo",
+          it: "da#dal",
+          trad: "zno",
+        },
+        {
+          type: "complemento_di_oggetto_modo_e_stato",
+          it: "che",
+          trad: "kal",
+        },
+        {
+          type: "complemento_di_stato_in_luogo",
+          it: "in",
+          trad: "vala",
+        },
+      ];
+
+      const PARTICLES = [
+        { type: "particella_pronominale", it: "ci", trad: "ku" },
+        { type: "particella_pronominale", it: "vi", trad: "de" },
+        {
+          type: "particella_di_congiunzione",
+          it: "tuttavia",
+          trad: "oca",
+        },
+        {
+          type: "particella_di_congiunzione",
+          it: "inquanto",
+          trad: "Pra",
+        },
+        {
+          type: "particella_di_congiunzione",
+          it: "e",
+          trad: "ih",
+        },
+        {
+          type: "particella_di_congiunzione",
+          it: "perchè#perché",
+          trad: "ah",
+          requiresSentenceType: "question",
+        },
+        {
+          type: "particella_di_congiunzione",
+          it: "poiché#perché",
+          trad: "talim",
+        },
+        {
+          type: "particella_di_congiunzione",
+          it: "dove",
+          trad: "karage",
+        },
+        {
+          type: "particella_di_congiunzione",
+          it: "sia",
+          trad: "ter",
+        },
+        {
+          type: "particella_di_congiunzione",
+          it: "né",
+          trad: "uther",
+        },
+        {
+          type: "particella_di_congiunzione",
+          it: "ma",
+          trad: "stido",
+        },
+        {
+          type: "particella_localizzatrice",
+          it: "sopra#su",
+          trad: "bi",
+        },
+        {
+          type: "particella_localizzatrice",
+          it: "sotto#giù",
+          trad: "stal",
+        },
+        {
+          type: "particella_localizzatrice",
+          it: "accanto",
+          trad: "kin",
+        },
+        {
+          type: "particella_localizzatrice",
+          it: "dietro",
+          trad: "prastu",
+        },
+        {
+          type: "particella_localizzatrice",
+          it: "tra",
+          trad: "isho",
+        },
+        {
+          type: "particella_localizzatrice",
+          it: "infronte#di fronte",
+          trad: "minna",
+        },
+        {
+          type: "particella_localizzatrice",
+          it: "dentro#in",
+          trad: "loto",
+        },
+        {
+          type: "particella_localizzatrice",
+          it: "fuori",
+          trad: "adoto",
+        },
+        {
+          type: "particella_quantificatrice",
+          it: "dro",
+          trad: "pocho",
+        },
+        {
+          type: "particella_quantificatrice",
+          it: "poco",
+          trad: "dro",
+        },
+        {
+          type: "particella_quantificatrice",
+          it: "molto",
+          trad: "axu",
+        },
+        {
+          type: "particella_quantificatrice",
+          it: "tanto",
+          trad: "okoso",
+        },
+        {
+          type: "particella_quantificatrice",
+          it: "tutto",
+          trad: "beres",
+        },
+        {
+          type: "particella_quantificatrice",
+          it: "quanto",
+          trad: "fas",
+        },
+        {
+          type: "particella_quantificatrice",
+          it: "carente#scarso",
+          trad: "osap",
+        },
+        {
+          type: "particella_quantificatrice",
+          it: "eccessivo#troppo",
+          trad: "dadras",
+        },
+        {
+          type: "particella_quantificatrice",
+          it: "sufficiente",
+          trad: "ridiki",
+        },
+        {
+          type: "particella_di_definizione",
+          it: "nessuno",
+          trad: "obo",
+        },
+        {
+          type: "particella_di_definizione",
+          it: "ciascuno",
+          trad: "zamut",
+        },
+        {
+          type: "particella_di_definizione",
+          it: "qualcuno",
+          trad: "faitu",
+        },
+        {
+          type: "particella_di_definizione",
+          it: "tutti",
+          trad: "accino",
+        },
+        {
+          type: "particella_di_definizione",
+          it: "alcun*",
+          trad: "garah",
+        },
+      ];
+
+      const PRONOUNS = [
+        // personali
+        {
+          type: "pronome_personale",
+          it: "io#me#mi",
+          trad: "ve",
+        },
+        {
+          type: "pronome_personale",
+          it: "tu#te#ti",
+          trad: "on",
+        },
+        {
+          type: "pronome_personale",
+          it: "egli#esso#gli#la#le#lui#lei",
+          trad: "fir",
+        },
+        {
+          type: "pronome_personale",
+          it: "noi#ci",
+          trad: "jar",
+        },
+        {
+          type: "pronome_personale",
+          it: "voi#vi",
+          trad: "ze",
+        },
+        {
+          type: "pronome_personale",
+          it: "essi#loro#li#le#ne",
+          trad: "ok",
+        },
+        // possessivi
+        {
+          type: "pronome_possessivo",
+          it: "mio#mia#mie#miei",
+          trad: "ram",
+        },
+        {
+          type: "pronome_possessivo",
+          it: "tuo#tua#tuoi",
+          trad: "tal",
+        },
+        {
+          type: "pronome_possessivo",
+          it: "suo#sua#suoi",
+          trad: "sen",
+        },
+        {
+          type: "pronome_possessivo",
+          it: "nostro#nostra#nostri",
+          trad: "goz",
+        },
+        {
+          type: "pronome_possessivo",
+          it: "vostro#vostra#vostri",
+          trad: "vam",
+        },
+        {
+          type: "pronome_possessivo",
+          it: "loro",
+          trad: "ogn",
+        },
+        // dimostrativi
+        {
+          type: "pronome_dimostrativo",
+          it: "questo#questa#quest",
+          trad: "nin",
+        },
+        {
+          type: "pronome_dimostrativo",
+          it: "quello#quella#quel",
+          trad: "nad",
+        },
+        {
+          type: "pronome_dimostrativo",
+          it: "quale",
+          trad: "pit",
+        },
+        {
+          type: "pronome_dimostrativo",
+          it: "chi",
+          trad: "ech",
+        },
+        {
+          type: "pronome_dimostrativo",
+          it: "che",
+          trad: "lad",
+        },
+        {
+          type: "pronome_dimostrativo",
+          it: "cosa",
+          trad: "sud",
+        },
+      ];
+
+      function loadInput() {
+        return document.getElementById("da-tradurre").value;
+      }
+
+      function matchWordInner(test, word) {
+        if (test.length !== word.length) {
+          return false;
+        }
+        test = test.toLowerCase();
+        word = word.toLowerCase();
+
+        let splTest = test.split("");
+        let splWord = word.split("");
+
+        for (let i = 0; i < splTest.length; i++) {
+          let char1 = splTest[i];
+          let char2 = splWord[i];
+          if (char1 === char2 || char1 === "*") {
+            continue;
+          }
+          return false;
+        }
+
+        return true;
+      }
+
+      function matchWord(test, word) {
+        if (word) {
+          let splText = test.split("#");
+          for (let i = 0; i < splText.length; i++) {
+            let res = matchWordInner(splText[i], word);
+            if (res) {
+              writeDebugLV2DevOut(
+                "Matched word tokens: <strong>" +
+                  test +
+                  " - ON - " +
+                  word +
+                  "</strong>"
+              );
+              return true;
+            }
+          }
+        }
+
+        return false;
+      }
+
+      function obtainWordConstruct(word) {
+        for (let i = 0; i < WORDS.length; i++) {
+          if (matchWord(WORDS[i].it, word)) {
+            return WORDS[i];
+          }
+          if (WORDS[i].it_plurale && matchWord(WORDS[i].it_plurale, word)) {
+            let clone = { ...WORDS[i] };
+            clone.trad = clone.trad + "k";
+            return clone;
+          }
+        }
+        return null;
+      }
+
+      function getBluntWord(word, periodType) {
+        let blunt = obtainWordConstruct(word);
+
+        if (!blunt) {
+          blunt = PRONOUNS.find((x) => matchWord(x.it, word));
+        }
+        if (!blunt) {
+          blunt = AVVERBS.find((x) => matchWord(x.it, word));
+        }
+        if (!blunt) {
+          blunt = PARTICLES.find(
+            (x) =>
+              matchWord(x.it, word) &&
+              (x.requiresSentenceType === undefined ||
+                x.requiresSentenceType === periodType)
+          );
+        }
+
+        return blunt ? blunt : null;
+      }
+
+      function matchVerbEdings(endings, word) {
+        for (let i = 0; i < endings.length; i++) {
+          if (word.toLowerCase().endsWith(endings[i])) {
+            return true;
+          }
+        }
+        return false;
+      }
+
+      function matchVerbPrefixes(endings, word) {
+        for (let i = 0; i < endings.length; i++) {
+          if (word.toLowerCase().startsWith(endings[i])) {
+            return true;
+          }
+        }
+        return false;
+      }
+
+      function buildVerbTranslated(time, verb) {
+        let infiniteDesinence = VERBS_STRUCTURE.find(
+          (x) => x.tempo === "infinito"
+        ).desinenza.replace("-", "");
+
+        let translatedDesinence = VERBS_STRUCTURE.find(
+          (x) => x.tempo === time.time
+        ).desinenza.replace("-", "");
+
+        let traduzioneInfinitaRidotta = verb.trad.substring(
+          0,
+          verb.trad.length - infiniteDesinence.length
+        );
+
+        return traduzioneInfinitaRidotta + translatedDesinence;
+      }
+
+      function cloneOtherTimeDesinence(timeToClone) {
+        return IT_VERBS_DESINENSE.find((x) => x.time === timeToClone).desinenze;
+      }
+
+      function getDesinenceCardAware(timeInstance) {
+        let desinenze = [...timeInstance.desinenze];
+
+        if (desinenze[0].startsWith("$")) {
+          desinenze = cloneOtherTimeDesinence(desinenze[0].substring(1));
+        }
+
+        return desinenze;
+      }
+
+      function testAuxVerbMatch(auxVerb, auxDesinence) {
+        if (auxVerb && auxDesinence) {
+          let desinenze = getDesinenceCardAware({ desinenze: [auxDesinence] });
+          for (let i = 0; i < desinenze.length; i++) {
+            if (auxVerb.endsWith(desinenze[i])) {
+              return {
+                result: true,
+                consumedAux: true,
+              };
+            }
+          }
+          return {
+            result: false,
+            consumedAux: false,
+          };
+        }
+
+        return {
+          result: auxDesinence === undefined,
+          consumedAux: false,
+        };
+      }
+
+      function getVerb(word, periodType, potentialAux) {
+        let chosenTime = null;
+        let matchedTimeOnPrefix = "";
+        let choosenVerb = null;
+        let consumedAux = false;
+        let matchedOnPrefix = "";
+
+        for (let i = 0; i < IT_VERBS_DESINENSE.length; i++) {
+          let v = IT_VERBS_DESINENSE[i];
+          let desinenze = getDesinenceCardAware(v);
+          for (let j = 0; j < desinenze.length; j++) {
+            let auxTest = testAuxVerbMatch(potentialAux, v.aux);
+            if (
+              word.toLowerCase().endsWith(desinenze[j]) &&
+              auxTest.result &&
+              desinenze[j].length > matchedTimeOnPrefix.length
+            ) {
+              matchedTimeOnPrefix = desinenze[j];
+              chosenTime = v;
+              consumedAux = auxTest.consumedAux;
+              break;
+            }
+          }
+        }
+
+        for (let i = 0; i < IT_VERBS_PREFIXES_MAP.length; i++) {
+          let v = IT_VERBS_PREFIXES_MAP[i];
+          for (let j = 0; j < v.suffissi.length; j++) {
+            if (
+              word.toLowerCase().startsWith(v.suffissi[j]) &&
+              v.suffissi[j].length > matchedOnPrefix.length
+            ) {
+              matchedOnPrefix = v.suffissi[j];
+              choosenVerb = v;
+            }
+          }
+        }
+
+        writeDebugLV2DevOut(
+          "Verb analysis partials: " +
+            JSON.stringify({
+              chosenTime,
+              choosenVerb,
+            })
+        );
+
+        if (periodType === "exclamation" && chosenTime.time === "presente") {
+          chosenTime = IT_VERBS_DESINENSE.find((x) => x.time === "imperativo");
+        }
+
+        let translatedVerb = "[?]";
+
+        if (chosenTime && choosenVerb) {
+          translatedVerb = buildVerbTranslated(chosenTime, choosenVerb);
+          return {
+            trad: translatedVerb,
+            time: chosenTime.time,
+            consumedAux: consumedAux,
+          };
+        }
+        return null;
+      }
+
+      function getMatchingComplement(word, processNextWord) {
+        let sortedComplements = COMPLEMENTS.sort(function (left, right) {
+          return left.hasOwnProperty("raisedBy")
+            ? -1
+            : right.hasOwnProperty("raisedBy")
+            ? 1
+            : 0;
+        });
+        for (let i = 0; i < sortedComplements.length; i++) {
+          let c = sortedComplements[i];
+          let wordMatches = matchWord(c.it, word);
+          if (wordMatches) {
+            if (c.raisedBy) {
+              for (let j = 0; j < c.raisedBy.length; j++) {
+                let r = c.raisedBy[j];
+                if (processNextWord && r.type === processNextWord.type) {
+                  return c;
+                }
+              }
+            } else {
+              return c;
+            }
+          }
+        }
+      }
+
+      function splitNumberInCoreTokens(wordNumber) {
+        let splKeys = NUMBERS_IT.map((x) => {
+          return x.it;
+        }).filter((x) => x);
+
+        let readnumbers = [];
+        let something_changed = true;
+        while (wordNumber !== "" && something_changed) {
+          something_changed = false;
+          for (let i = 0; i < splKeys.length && wordNumber !== ""; i++) {
+            if (wordNumber.startsWith(splKeys[i])) {
+              something_changed = true;
+              readnumbers.push(splKeys[i]);
+              wordNumber = wordNumber.substring(splKeys[i].length);
+              break;
+            }
+          }
+        }
+
+        writeDebugLV2DevOut("Number tokens results: " + readnumbers.join(", "));
+
+        let number = "";
+        for (let i = 0; i < readnumbers.length; i++) {
+          let n = readnumbers[i];
+          let next = i + 1 < readnumbers.length ? readnumbers[i + 1] : null;
+
+          let currN = NUMBERS_IT.find((x) => x.it === n);
+          let nextN = NUMBERS_IT.find((x) => x.it === next);
+
+          let currOrder = NUMBERS_ORDERS.find(
+            (x) => x.order === currN.it_.length - 1
+          );
+          let nextOrder = next
+            ? NUMBERS_ORDERS.find((x) => x.order === nextN.it_.length - 1)
+            : null;
+
+          let plural =
+            nextOrder &&
+            ["2", "3", "4", "5", "6", "7", "8", "9"].includes(currN.it_);
+          let baseTrad = "";
+          let appendLater = "";
+
+          // number + magnitude (2mila... 3cento... etc)
+          if (!currOrder && nextOrder) {
+            baseTrad = currN.trad;
+            appendLater = nextOrder.trad;
+            i++;
+          }
+
+          // magnitude only (cento, mille)
+          if (currOrder) {
+            baseTrad = !plural
+              ? NUMBERS_IT.find((x) => x.it_ === "1").trad
+              : "";
+            appendLater = currOrder.trad;
+          }
+
+          // number only (1,2,3)
+          if (!currOrder && !nextOrder) {
+            baseTrad = currN.trad;
+          }
+
+          number += baseTrad + appendLater + (plural ? "k" : "");
+        }
+        return number;
+      }
+
+      function getNumber(word, lastVerbSeen) {
+        writeDebugLV2DevOut("About to try interpreting as number: " + word);
+
+        return {
+          type: "numero",
+          trad: splitNumberInCoreTokens(word),
+          it: word,
+        };
+      }
+
+      // NOTE: lastVerbSeen is a VERB only if the PREVIOUS parsed work was a verb, else is undefined
+      function getConstruct(
+        word,
+        periodType,
+        lastVerbSeen,
+        allWords,
+        position
+      ) {
+        let processNextWord =
+          position + 1 < allWords.length
+            ? getConstruct(
+                allWords[position + 1],
+                periodType,
+                null,
+                allWords,
+                position + 1
+              )
+            : null;
+
+        if (lastVerbSeen || position == 0 || processNextWord) {
+          let complement = getMatchingComplement(word, processNextWord);
+          if (complement) {
+            return complement;
+          }
+        }
+
+        let construct = getBluntWord(word, periodType);
+
+        if (!construct) {
+          construct = getBluntWord(word);
+        }
+
+        if (!construct) {
+          let verbDetails = getVerb(word, periodType, lastVerbSeen);
+          if (verbDetails) {
+            construct = {
+              type: "verbo",
+              trad: verbDetails.trad,
+              it: word,
+              verbTime: verbDetails.time,
+              consumedAux: verbDetails.consumedAux,
+            };
+          }
+        }
+
+        if (!construct) {
+          construct = getNumber(word, lastVerbSeen);
+        }
+
+        if (!construct) {
+          construct = {
+            type: "UNMATCHED",
+            trad: "[?]",
+            it: word,
+          };
+        }
+
+        return construct;
+      }
+
+      function translateSinglePeriodInner(value, periodType) {
+        let words = value.split(" ").filter((x) => x);
+        let constructs = [];
+        let subordinateWords = null;
+        let subordinateWordsComplement = null;
+        let lastVerbSeen = undefined;
+        for (let i = 0; i < words.length; i++) {
+          let w = words[i];
+          let nextWord = i + 1 < words.length ? words[i + 1] : null;
+          let addMeAtEnd = null;
+          let construct = getConstruct(w, periodType, lastVerbSeen, words, i);
+
+          writeDebugDevOut(
+            "Recognized construct on word: <strong>" +
+              w +
+              "</strong>. Result:\n " +
+              JSON.stringify(construct, null, 4)
+          );
+
+          // special fixes on positioning
+          if (constructs.length > 0) {
+            // pronome possessivo si inverte con il sostantivo che regge
+            if (
+              construct.type === "pronome_possessivo" &&
+              constructs[constructs.length - 1].type === "sostantivo"
+            ) {
+              addMeAtEnd = constructs[constructs.length - 1];
+              constructs.pop();
+            }
+
+            // gerundio-passato identifica subordinata a seguire
+            if (
+              construct.type === "verbo" &&
+              construct.verbTime === "gerundio-passato"
+            ) {
+              // grab all the remaining words
+              i++; // we use while to kill the for loop
+              let remainingWords = [];
+              while (i < words.length) {
+                remainingWords.push(words[i]);
+                i++;
+              }
+
+              subordinateWords = remainingWords.join(" ");
+              writeDebugDevOut(
+                "Hidden subordinate period detected: <strong>" +
+                  subordinateWords +
+                  "</strong>.  "
+              );
+            }
+
+            // complemento_di_fine_e_complemento_di_causa identifica subordinata a seguire
+            if (
+              construct.type === "complemento_di_fine_e_complemento_di_causa"
+            ) {
+              construct = null; // process in subordinate
+              // grab all the remaining words
+              let remainingWords = [];
+              while (i < words.length) {
+                remainingWords.push(words[i]);
+                i++;
+              }
+
+              subordinateWordsComplement = remainingWords.join(" ");
+              writeDebugDevOut(
+                "Hidden subordinate period detected from complement: <strong>" +
+                  subordinateWordsComplement +
+                  "</strong>.  "
+              );
+            }
+          }
+
+          if (construct) {
+            if (construct.type === "verbo") {
+              lastVerbSeen = construct.it;
+
+              if (construct.consumedAux) {
+                constructs.pop();
+              }
+            } else {
+              lastVerbSeen = undefined;
+            }
+
+            constructs.push(construct);
+
+            if (addMeAtEnd) {
+              constructs.push(addMeAtEnd);
+            }
+          }
+        }
+
+        let nonVerbs = constructs.filter((x) => x.type !== "verbo");
+        let verbs = constructs.filter((x) => x.type === "verbo");
+        let sortedConstructs = nonVerbs.concat(verbs);
+
+        // process separatedly a subordinate period
+        let subordinateConstructs = subordinateWords
+          ? translateSinglePeriodInner(subordinateWords, periodType)
+          : [];
+
+        // process separatedly a subordinate period from complement
+        let subordinateConstructsComplements = subordinateWordsComplement
+          ? translateSinglePeriodInner(subordinateWordsComplement, periodType)
+          : [];
+
+        sortedConstructs = sortedConstructs.concat(
+          subordinateConstructsComplements
+        );
+
+        let finalConstructs = subordinateConstructs.concat(sortedConstructs);
+
+        return finalConstructs;
+      }
+
+      function removeUntranslatableTokens(period) {
+        let splWords = period.split(" ");
+        let cleanedWords = [];
+        for (let i = 0; i < splWords.length; i++) {
+          let word = splWords[i];
+          let validToken = true;
+          if (IT_ARTICLES.find((x) => matchWord(x.it, word))) {
+            validToken = false;
+          }
+
+          if (validToken) {
+            cleanedWords.push(word);
+          }
+        }
+
+        writeDebugDevOut(
+          "Preprocessed period: " +
+            period +
+            ". Result: " +
+            cleanedWords.join(" ")
+        );
+
+        return cleanedWords.join(" ");
+      }
+
+      // we can still have subortinate periods here. we must strip them away
+      function translateSinglePeriod(value, periodType) {
+        let subPeriods = splitMulti(value, [",", ";"]).filter((x) => x);
+
+        let costructs = [];
+        for (let i = 0; i < subPeriods.length; i++) {
+          let period = subPeriods[i];
+
+          let periodCleaned = removeUntranslatableTokens(period);
+
+          costructs = costructs.concat(
+            translateSinglePeriodInner(periodCleaned, periodType)
+          );
+          if (i !== subPeriods.length - 1) {
+            costructs.push({
+              type: "congiunzione_subortinata",
+              it: ",",
+              trad: ",",
+            });
+          }
+        }
+        return costructs;
+      }
+
+      function splitMulti(str, tokens) {
+        var tempChar = tokens[0]; // We can use the first token as a temporary join character
+        for (var i = 1; i < tokens.length; i++) {
+          str = str.split(tokens[i]).join(tempChar);
+        }
+        str = str.split(tempChar);
+        return str;
+      }
+
+      function typeFromSep(sep) {
+        switch (sep) {
+          case "!":
+            return "exclamation";
+          case "?":
+            return "question";
+          default:
+            return "normal";
+        }
+      }
+
+      function translate() {
+        document.getElementById("devout").innerHTML = "";
+        testDuplicates();
+        let value = loadInput();
+        let periods = splitMulti(value, [".", "!", "?"]).filter((x) => x);
+        let sortedSeparators = [];
+        for (let i = 0; i < value.length; i++) {
+          if (value[i] === ".") {
+            sortedSeparators.push(".");
+          }
+          if (value[i] === "?") {
+            sortedSeparators.push("?");
+          }
+          if (value[i] === "!") {
+            sortedSeparators.push("!");
+          }
+        }
+
+        let typedPeriods = periods.map((x, i) => {
+          return {
+            period: x,
+            type: typeFromSep(sortedSeparators[i]),
+          };
+        });
+
+        let constructs = [];
+
+        writeDevInfoOut(
+          "Detected periods: \n" + JSON.stringify(typedPeriods, null, 4)
+        );
+
+        for (let i = 0; i < typedPeriods.length; i++) {
+          constructs.push(
+            translateSinglePeriod(
+              typedPeriods[i].period.trim(),
+              typedPeriods[i].type
+            )
+          );
+        }
+
+        writeDevInfoOut(
+          "Processed entities: \n" + JSON.stringify(constructs, null, 4)
+        );
+
+        let trad = "";
+        for (let i = 0; i < constructs.length; i++) {
+          let periodTrad = constructs[i]
+            .map((x) => {
+              return x ? x.trad : "[?]";
+            })
+            .join(" ");
+
+          // opens formally any question
+          if (i < sortedSeparators.length && sortedSeparators[i] === "?") {
+            trad += "Ir ";
+          } else {
+            periodTrad =
+              periodTrad.charAt(0).toLocaleUpperCase() +
+              periodTrad.substring(1);
+          }
+
+          trad += periodTrad;
+
+          if (i < sortedSeparators.length) {
+            trad += sortedSeparators[i] + " ";
+          }
+        }
+
+        trad = trad.replaceAll(" ,", ",");
+
+        writeBaseTrad(trad);
+      }
+
+      function testDuplicates() {
+        let test = [
+          WORDS.map((x) => {
+            return x.trad;
+          }),
+          AVVERBS.map((x) => {
+            return x.trad;
+          }),
+          PRONOUNS.map((x) => {
+            return x.trad;
+          }),
+          PARTICLES.map((x) => {
+            return x.trad;
+          }),
+          IT_VERBS_PREFIXES_MAP.map((x) => {
+            return x.trad;
+          }),
+          COMPLEMENTS.map((x) => {
+            return x.trad;
+          }),
+          NUMBERS_IT.map((x) => {
+            return x.trad;
+          }),
+        ];
+
+        let seen = [];
+        let doubles = [];
+
+        test.forEach((t) => {
+          t.forEach((x) => {
+            if (x) {
+              if (seen.indexOf(x) === -1) {
+                seen.push(x);
+              } else {
+                doubles.push(x);
+              }
+            }
+          });
+        });
+
+        if (doubles.length === 0) {
+          writeDevInfoOut(
+            "Dictionary preliminary analysis: <strong>No duplicated translation items detected.</strong>"
+          );
+        } else {
+          writeDevErrorOut(
+            "Dictionary preliminary analysis: <strong> Duplicated translation items detected. Critical mistake. Edit the following terms: " +
+              JSON.stringify(doubles) +
+              "</strong>"
+          );
+        }
+      }
+
+      function testEnter(e) {
+        if (e.key === "Enter") {
+          translate();
+        }
+      }
+
+      function changeVerbosity(e) {
+        VERBOSITY = +e.target.value;
+
+        if (VERBOSITY === VERBOSITY_UI_NONE.level) {
+          document.getElementById("dev-out-wrap").style.display = "none";
+        } else {
+          document.getElementById("dev-out-wrap").style.display = "block";
+        }
+      }
+
+      function load() {
+        if (VERBOSITY === VERBOSITY_UI_NONE.level) {
+          document.getElementById("dev-out-wrap").style.display = "none";
+        }
+        let select = document.getElementById("verbosity-select");
+
+        for (let i = 0; i < VERBOSITY_LEVELS.length; i++) {
+          let o = document.createElement("option");
+          o.value = VERBOSITY_LEVELS[i].level;
+          o.innerHTML = VERBOSITY_LEVELS[i].text;
+          select.appendChild(o);
+        }
+
+        select.addEventListener("change", changeVerbosity, false);
+        document
+          .getElementById("da-tradurre")
+          .addEventListener("keydown", testEnter, false);
+
+        document
+          .getElementById("savebtn")
+          .addEventListener("click", translate, false);
+      }
+
+      function writeDevOut(out) {
+        let d = document.getElementById("devout");
+        d.innerHTML += out + "\n";
+      }
+
+      function writeDebugDevOut(out) {
+        if (VERBOSITY >= VERBOSITY_UI_DEBUG.level) {
+          writeDevInfoOut(out);
+        }
+      }
+
+      function writeDebugLV2DevOut(out) {
+        if (VERBOSITY >= VERBOSITY_UI_DEBUG_2.level) {
+          writeDevInfoOut(out);
+        }
+      }
+
+      function writeDevInfoOut(out) {
+        if (VERBOSITY >= VERBOSITY_UI_MINIMAL.level) {
+          writeDevOut(
+            "<div style='background-color: #e8e8e8;color: rgba(0,0,0,0.7);padding: 0.2em;'>" +
+              out +
+              "</div>"
+          );
+        }
+      }
+
+      function writeDevErrorOut(out) {
+        writeDevOut(
+          "<div style='background-color: #ffd5d5;color: rgba(0,0,0,0.7);padding: 0.2em;'>" +
+            out +
+            "</div>"
+        );
+      }
+
+      function writeDevWarnOut(out) {
+        writeDevOut(
+          "<div style='background-color: #ffff98;color: rgba(0,0,0,0.7);padding: 0.2em;'>" +
+            out +
+            "</div>"
+        );
+      }
+
+      function writeBaseTrad(out) {
+        let d = document.getElementById("base-trad");
+        d.innerHTML = out;
+      }
+    </script>
+  </head>
+  <body onload="load()" style="margin: 0">
+    <div
+      style="
+        background-color: rgba(0, 0, 0, 0.05);
+        min-height: 100vh;
+        padding: 1em;
+      "
+    >
+      <div style="display: flex; align-items: center; gap: 2em">
+        <h2>Traduttore lathangi</h2>
+        <small>v 0.0.1</small>
+        <div style="margin-left: auto">
+          <div>
+            Logging:
+            <select id="verbosity-select"></select>
+          </div>
+        </div>
+      </div>
+      <hr />
+
+      <br />
+      <strong>TRADUCI UN TESTO</strong>
+      <br />
+      <div style="display: flex; gap: 1em">
+        <input
+          style="width: 100%; padding: 0.5em"
+          id="da-tradurre"
+          type="text"
+          value="Perché alcuni uomini hanno appiccato un fuoco per distruggere la montagna. stiamo fuggendo dal loro fuoco, noi abbiamo aiutato"
+          placeholder="Inserire testo da tradurre."
+        />
+        <button id="savebtn">Traduci</button>
+      </div>
+      <br />
+      <br />
+
+      <strong>TRADUZIONE</strong>
+      <div
+        id="base-trad"
+        style="
+          padding: 1em;
+          background-color: white;
+          border: 1px solid rgba(0, 0, 0, 0.1);
+        "
+      ></div>
+      <div id="dev-out-wrap">
+        <br />
+        <br />
+        <strong>LOGS</strong>
+        <div
+          id="devout"
+          style="
+            white-space: pre;
+            padding: 1em;
+            background-color: white;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+          "
+        ></div>
+      </div>
+    </div>
+  </body>
+</html>
