@@ -78,6 +78,28 @@
           it_plurale: "montagne",
           trad: "plamaga",
         },
+        {
+          type: "sostantivo",
+          it: "foresta",
+          it_plurale: "foreste",
+          trad: "hin",
+        },
+        {
+          type: "sostantivo",
+          it: "nemico#nemica",
+          it_plurale: "nemici#nemiche",
+          trad: "emil",
+        },
+      ];
+
+      const ADJECTIVES = [
+        {
+          type: "aggettivo",
+          it: "vero",
+          it_plurale: "veri",
+          sostantivo: "verità",
+          trad: "thum",
+        },
       ];
 
       const IT_VERBS_PREFIXES_MAP = [
@@ -129,9 +151,19 @@
           suffissi: ["pos", "puo", "pot"],
         },
         {
+          verbo: "restare#rimanere",
+          trad: "gitele",
+          suffissi: ["res", "rim"],
+        },
+        {
           verbo: "volere",
           trad: "itcrae",
           suffissi: ["vog", "vuo", "vol"],
+        },
+        {
+          verbo: "dire",
+          trad: "gale",
+          suffissi: ["dic", "det", "dis", "dit"],
         },
         {
           verbo: "andare",
@@ -202,7 +234,7 @@
         },
         {
           time: "presente",
-          desinenze: ["o", "i", "a", "amo", "te", "no", "de"],
+          desinenze: ["o", "i", "a", "e", "amo", "te", "no", "de"],
         },
         {
           time: "passato",
@@ -911,7 +943,7 @@
         },
         {
           type: "complemento_di_specificazione",
-          it: "di",
+          it: "di#del#dello#della#dei",
           trad: "asa",
         },
         {
@@ -1504,6 +1536,27 @@
         return number;
       }
 
+      function getAdjective(word) {
+        for (let i = 0; i < ADJECTIVES.length; i++) {
+          let adg = ADJECTIVES[i];
+          if (matchWord(adg.it, word)) {
+            return adg;
+          }
+          if (matchWord(adg.it_plurale, word)) {
+            let clone = { ...adg };
+            clone.trad = adg.trad + "k";
+            return clone;
+          }
+          if (matchWord(adg.sostantivo, word)) {
+            let clone = { ...adg };
+            clone.trad = adg.trad + "te";
+            return adg;
+          }
+        }
+
+        return null;
+      }
+
       function getNumber(word, lastVerbSeen) {
         writeDebugLV2DevOut("About to try interpreting as number: " + word);
 
@@ -1557,6 +1610,10 @@
               consumedAux: verbDetails.consumedAux,
             };
           }
+        }
+
+        if (!construct) {
+          construct = getAdjective(word);
         }
 
         if (!construct) {
@@ -1644,6 +1701,27 @@
                   "</strong>.  "
               );
             }
+
+            // complemento_di_oggetto_modo_e_stato preceduto da verbo identifica subordinata a seguire
+            if (
+              lastVerbSeen &&
+              construct.type === "complemento_di_oggetto_modo_e_stato"
+            ) {
+              construct = null; // process in subordinate
+              // grab all the remaining words
+              let remainingWords = [];
+              while (i < words.length) {
+                remainingWords.push(words[i]);
+                i++;
+              }
+
+              subordinateWordsComplement = remainingWords.join(" ");
+              writeDebugDevOut(
+                "Hidden subordinate period detected from complement: <strong>" +
+                  subordinateWordsComplement +
+                  "</strong>.  "
+              );
+            }
           }
 
           if (construct) {
@@ -1695,6 +1773,11 @@
           let word = splWords[i];
           let validToken = true;
           if (IT_ARTICLES.find((x) => matchWord(x.it, word))) {
+            validToken = false;
+          }
+
+          // bad symbols
+          if (["'"].includes(word)) {
             validToken = false;
           }
 
@@ -1929,6 +2012,10 @@
           .getElementById("savebtn")
           .addEventListener("click", translate, false);
 
+        document
+          .getElementById("copy-btn")
+          .addEventListener("click", copyInput, false);
+
         let currValue = localStorage.getItem("curr-value");
         if (currValue) {
           document.getElementById("da-tradurre").value = currValue;
@@ -1982,6 +2069,17 @@
         let d = document.getElementById("base-trad");
         d.innerHTML = out;
       }
+
+      function copyInput() {
+        // Get the text field
+        var copyText = document.getElementById("base-trad").innerText;
+
+        // Copy the text inside the text field
+        navigator.clipboard.writeText(copyText.toString()).then((r) => {
+          // Alert the copied text
+          alert("Copied");
+        });
+      }
     </script>
   </head>
   <body onload="load()" style="margin: 0">
@@ -2021,13 +2119,17 @@
 
       <strong>TRADUZIONE</strong>
       <div
-        id="base-trad"
         style="
+          display: flex;
           padding: 1em;
+          gap: 1em;
           background-color: white;
           border: 1px solid rgba(0, 0, 0, 0.1);
         "
-      ></div>
+      >
+        <div><button id="copy-btn">copia</button></div>
+        <div id="base-trad"></div>
+      </div>
       <div id="dev-out-wrap">
         <br />
         <br />
